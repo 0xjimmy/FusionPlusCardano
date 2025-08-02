@@ -6,7 +6,14 @@
     "build": "aiken build",
     "check": "aiken check",
     "test": "aiken check",
+    "deploy": "bun test/sourceEscrow.ts",
     "clean": "rm -rf plutus.json"
   },
-  "devDependencies": {}
+  "dependencies": {
+    "@evolution-sdk/lucid": "^2.0.1",
+    "@noble/hashes": "^1.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
 }

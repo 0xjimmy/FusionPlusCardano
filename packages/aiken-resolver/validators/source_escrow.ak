@@ -29,37 +29,59 @@ validator source_escrow {
     _input: OutputReference,
     tx: Transaction,
   ) {
+    trace @"source_escrow_spend": @"start"
+    
     expect Some(datum) = datum_opt
+    
+    trace @"datum_parsed": datum.expire_timestamp, datum.maker_address, datum.taker_address, datum.secret_hash
     
     when redeemer is {
       // Maker can claim after expiry timestamp
       MakerClaim -> {
+        trace @"redeemer": @"MakerClaim"
+        
         // Check if current time >= expire_timestamp using vodka
         let expired = valid_after(tx.validity_range, datum.expire_timestamp)
+        trace @"time_check": @"expired", expired, tx.validity_range, datum.expire_timestamp
         
         // Check that maker has signed the transaction
         let maker_signed = key_signed(tx.extra_signatories, datum.maker_address)
+        trace @"signature_check": @"maker_signed", maker_signed, tx.extra_signatories, datum.maker_address
         
-        expired && maker_signed
+        let result = expired && maker_signed
+        trace @"maker_claim_result": result
+        
+        result
       }
       
       // Taker can claim before expiry with correct secret
       TakerClaim { secret } -> {
+        trace @"redeemer": @"TakerClaim", secret
+        
         // Check if current time < expire_timestamp (not expired yet)
         let not_expired = !valid_after(tx.validity_range, datum.expire_timestamp)
+        trace @"time_check": @"not_expired", not_expired, tx.validity_range, datum.expire_timestamp
         
         // Verify secret hashes to stored hash using Keccak256
-        let secret_valid = keccak_256(secret) == datum.secret_hash
+        let secret_hash = keccak_256(secret)
+        trace @"secret_validation": @"calculated_hash", secret_hash, @"stored_hash", datum.secret_hash
+        let secret_valid = secret_hash == datum.secret_hash
+        trace @"secret_validation": @"secret_valid", secret_valid
         
         // Check that taker has signed the transaction
         let taker_signed = key_signed(tx.extra_signatories, datum.taker_address)
+        trace @"signature_check": @"taker_signed", taker_signed, tx.extra_signatories, datum.taker_address
         
-        not_expired && secret_valid && taker_signed
+        let result = not_expired && secret_valid && taker_signed
+        trace @"taker_claim_result": result, not_expired, secret_valid, taker_signed
+        
+        result
       }
     }
   }
 
   else(_) {
+    trace @"source_escrow_spend": @"fail_else"
     fail
   }
 }
