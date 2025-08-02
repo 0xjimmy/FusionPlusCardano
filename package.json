@@ -4,11 +4,14 @@
   "description": "Monorepo with Aiken, Foundry, Vite+Preact, and Hono packages",
   "private": true,
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm --filter=@1inch/cross-chain-sdk build && pnpm --filter=@fusion-cardano/shared build && pnpm --filter=@fusion/server build && pnpm --filter=@fusion/frontend build",
+    "build:all": "pnpm -r build",
+    "build:sdk": "pnpm --filter=@1inch/cross-chain-sdk build",
     "dev": "pnpm -r dev",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
-    "clean": "pnpm -r clean"
+    "clean": "pnpm -r clean",
+    "clean:all": "pnpm -r clean && rm -rf node_modules && pnpm install"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
@@ -16,5 +19,11 @@
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "cross-spawn@>=7.0.0 <7.0.5": ">=7.0.5",
+      "elliptic@<=6.6.0": ">=6.6.1"
+    }
   }
 }

@@ -53,11 +53,6 @@ const gasCostConfigSchema = z.object({
   gasPriceEstimate: z.string(),
 });
 
-const exclusiveResolverSchema = z.object({
-  costInDstToken: z.string(),
-  points: z.array(auctionPointSchema),
-});
-
 const presetSchema = z.object({
   auctionDuration: z.number(),
   startAuctionIn: z.number(),
@@ -65,7 +60,9 @@ const presetSchema = z.object({
   auctionStartAmount: z.string(),
   startAmount: z.string(),
   auctionEndAmount: z.string(),
-  exclusiveResolver: exclusiveResolverSchema.nullable().optional(),
+  exclusiveResolver: z.string().nullable(),
+  costInDstToken: z.string().optional(),
+  points: z.array(auctionPointSchema).optional(),
   allowPartialFills: z.boolean(),
   allowMultipleFills: z.boolean(),
   gasCost: gasCostConfigSchema,
@@ -94,13 +91,12 @@ const tokenPairSchema = z.object({
   dstToken: z.string(),
 });
 
-const pairCurrencySchema = z.object({
+const volumeSchema = z.object({
   usd: tokenPairSchema,
 });
 
 const pricesSchema = z.object({
   usd: tokenPairSchema,
-  volume: pairCurrencySchema.optional(),
 });
 
 /**
@@ -108,16 +104,23 @@ const pricesSchema = z.object({
  * Based on 1inch Fusion Plus API swagger documentation
  */
 export const getQuoteResponseSchema = z.object({
-  quoteId: z.string(),
+  quoteId: z.string().nullable(),
+  srcTokenAmount: z.string().optional(),
+  dstTokenAmount: z.string().optional(),
   presets: quotePresetsSchema,
+  timeLocks: timeLocksSchema,
   srcEscrowFactory: z.string(),
   dstEscrowFactory: z.string(),
-  whitelist: z.array(z.string()),
-  timeLocks: timeLocksSchema,
   srcSafetyDeposit: z.string(),
   dstSafetyDeposit: z.string(),
+  whitelist: z.array(z.string()),
   recommendedPreset: z.enum(["fast", "slow", "medium", "custom"]),
   prices: pricesSchema,
+  volume: volumeSchema.optional(),
+  priceImpactPercent: z.number().optional(),
+  autoK: z.number().optional(),
+  k: z.number().optional(),
+  mxK: z.number().optional(),
 });
 
 export type GetQuoteResponse = z.infer<typeof getQuoteResponseSchema>; 

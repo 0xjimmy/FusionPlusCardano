@@ -1,9 +1,8 @@
 import { Hono } from 'hono'
-import orders from './orders'
+import quoter from './quoter'
 
 const relayer = new Hono()
 
-// Mount relayer routes
-relayer.route('/orders', orders)
+relayer.route('/quoter', quoter)
 
 export default relayer 

@@ -43,7 +43,9 @@ export type GetQuoteParams = z.infer<typeof getQuoteSchema>;
  * Based on 1inch Fusion Plus API swagger documentation
  */
 export declare const getQuoteResponseSchema: z.ZodObject<{
-    quoteId: z.ZodString;
+    quoteId: z.ZodNullable<z.ZodString>;
+    srcTokenAmount: z.ZodOptional<z.ZodString>;
+    dstTokenAmount: z.ZodOptional<z.ZodString>;
     presets: z.ZodObject<{
         fast: z.ZodObject<{
             auctionDuration: z.ZodNumber;
@@ -52,31 +54,18 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: z.ZodString;
             startAmount: z.ZodString;
             auctionEndAmount: z.ZodString;
-            exclusiveResolver: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-                costInDstToken: z.ZodString;
-                points: z.ZodArray<z.ZodObject<{
-                    delay: z.ZodNumber;
-                    coefficient: z.ZodNumber;
-                }, "strip", z.ZodTypeAny, {
-                    delay: number;
-                    coefficient: number;
-                }, {
-                    delay: number;
-                    coefficient: number;
-                }>, "many">;
+            exclusiveResolver: z.ZodNullable<z.ZodString>;
+            costInDstToken: z.ZodOptional<z.ZodString>;
+            points: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                delay: z.ZodNumber;
+                coefficient: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
+                delay: number;
+                coefficient: number;
             }, {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            }>>>;
+                delay: number;
+                coefficient: number;
+            }>, "many">>;
             allowPartialFills: z.ZodBoolean;
             allowMultipleFills: z.ZodBoolean;
             gasCost: z.ZodObject<{
@@ -97,6 +86,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -104,13 +94,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         }, {
             auctionDuration: number;
             startAuctionIn: number;
@@ -118,6 +106,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -125,13 +114,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         }>;
         medium: z.ZodObject<{
             auctionDuration: z.ZodNumber;
@@ -140,31 +127,18 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: z.ZodString;
             startAmount: z.ZodString;
             auctionEndAmount: z.ZodString;
-            exclusiveResolver: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-                costInDstToken: z.ZodString;
-                points: z.ZodArray<z.ZodObject<{
-                    delay: z.ZodNumber;
-                    coefficient: z.ZodNumber;
-                }, "strip", z.ZodTypeAny, {
-                    delay: number;
-                    coefficient: number;
-                }, {
-                    delay: number;
-                    coefficient: number;
-                }>, "many">;
+            exclusiveResolver: z.ZodNullable<z.ZodString>;
+            costInDstToken: z.ZodOptional<z.ZodString>;
+            points: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                delay: z.ZodNumber;
+                coefficient: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
+                delay: number;
+                coefficient: number;
             }, {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            }>>>;
+                delay: number;
+                coefficient: number;
+            }>, "many">>;
             allowPartialFills: z.ZodBoolean;
             allowMultipleFills: z.ZodBoolean;
             gasCost: z.ZodObject<{
@@ -185,6 +159,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -192,13 +167,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         }, {
             auctionDuration: number;
             startAuctionIn: number;
@@ -206,6 +179,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -213,13 +187,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         }>;
         slow: z.ZodObject<{
             auctionDuration: z.ZodNumber;
@@ -228,31 +200,18 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: z.ZodString;
             startAmount: z.ZodString;
             auctionEndAmount: z.ZodString;
-            exclusiveResolver: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-                costInDstToken: z.ZodString;
-                points: z.ZodArray<z.ZodObject<{
-                    delay: z.ZodNumber;
-                    coefficient: z.ZodNumber;
-                }, "strip", z.ZodTypeAny, {
-                    delay: number;
-                    coefficient: number;
-                }, {
-                    delay: number;
-                    coefficient: number;
-                }>, "many">;
+            exclusiveResolver: z.ZodNullable<z.ZodString>;
+            costInDstToken: z.ZodOptional<z.ZodString>;
+            points: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                delay: z.ZodNumber;
+                coefficient: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
+                delay: number;
+                coefficient: number;
             }, {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            }>>>;
+                delay: number;
+                coefficient: number;
+            }>, "many">>;
             allowPartialFills: z.ZodBoolean;
             allowMultipleFills: z.ZodBoolean;
             gasCost: z.ZodObject<{
@@ -273,6 +232,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -280,13 +240,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         }, {
             auctionDuration: number;
             startAuctionIn: number;
@@ -294,6 +252,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -301,13 +260,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         }>;
         custom: z.ZodOptional<z.ZodObject<{
             auctionDuration: z.ZodNumber;
@@ -316,31 +273,18 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: z.ZodString;
             startAmount: z.ZodString;
             auctionEndAmount: z.ZodString;
-            exclusiveResolver: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-                costInDstToken: z.ZodString;
-                points: z.ZodArray<z.ZodObject<{
-                    delay: z.ZodNumber;
-                    coefficient: z.ZodNumber;
-                }, "strip", z.ZodTypeAny, {
-                    delay: number;
-                    coefficient: number;
-                }, {
-                    delay: number;
-                    coefficient: number;
-                }>, "many">;
+            exclusiveResolver: z.ZodNullable<z.ZodString>;
+            costInDstToken: z.ZodOptional<z.ZodString>;
+            points: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                delay: z.ZodNumber;
+                coefficient: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
+                delay: number;
+                coefficient: number;
             }, {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            }>>>;
+                delay: number;
+                coefficient: number;
+            }>, "many">>;
             allowPartialFills: z.ZodBoolean;
             allowMultipleFills: z.ZodBoolean;
             gasCost: z.ZodObject<{
@@ -361,6 +305,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -368,13 +313,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         }, {
             auctionDuration: number;
             startAuctionIn: number;
@@ -382,6 +325,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -389,13 +333,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         }>>;
     }, "strip", z.ZodTypeAny, {
         fast: {
@@ -405,6 +347,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -412,13 +355,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         medium: {
             auctionDuration: number;
@@ -427,6 +368,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -434,13 +376,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         slow: {
             auctionDuration: number;
@@ -449,6 +389,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -456,13 +397,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         custom?: {
             auctionDuration: number;
@@ -471,6 +410,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -478,13 +418,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         } | undefined;
     }, {
         fast: {
@@ -494,6 +432,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -501,13 +440,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         medium: {
             auctionDuration: number;
@@ -516,6 +453,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -523,13 +461,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         slow: {
             auctionDuration: number;
@@ -538,6 +474,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -545,13 +482,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         custom?: {
             auctionDuration: number;
@@ -560,6 +495,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -567,18 +503,13 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         } | undefined;
     }>;
-    srcEscrowFactory: z.ZodString;
-    dstEscrowFactory: z.ZodString;
-    whitelist: z.ZodArray<z.ZodString, "many">;
     timeLocks: z.ZodObject<{
         srcWithdrawal: z.ZodNumber;
         srcPublicWithdrawal: z.ZodNumber;
@@ -604,8 +535,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
         dstPublicWithdrawal: number;
         dstCancellation: number;
     }>;
+    srcEscrowFactory: z.ZodString;
+    dstEscrowFactory: z.ZodString;
     srcSafetyDeposit: z.ZodString;
     dstSafetyDeposit: z.ZodString;
+    whitelist: z.ZodArray<z.ZodString, "many">;
     recommendedPreset: z.ZodEnum<["fast", "slow", "medium", "custom"]>;
     prices: z.ZodObject<{
         usd: z.ZodObject<{
@@ -618,53 +552,45 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             srcToken: string;
             dstToken: string;
         }>;
-        volume: z.ZodOptional<z.ZodObject<{
-            usd: z.ZodObject<{
-                srcToken: z.ZodString;
-                dstToken: z.ZodString;
-            }, "strip", z.ZodTypeAny, {
-                srcToken: string;
-                dstToken: string;
-            }, {
-                srcToken: string;
-                dstToken: string;
-            }>;
-        }, "strip", z.ZodTypeAny, {
-            usd: {
-                srcToken: string;
-                dstToken: string;
-            };
-        }, {
-            usd: {
-                srcToken: string;
-                dstToken: string;
-            };
-        }>>;
     }, "strip", z.ZodTypeAny, {
         usd: {
             srcToken: string;
             dstToken: string;
         };
-        volume?: {
-            usd: {
-                srcToken: string;
-                dstToken: string;
-            };
-        } | undefined;
     }, {
         usd: {
             srcToken: string;
             dstToken: string;
         };
-        volume?: {
-            usd: {
-                srcToken: string;
-                dstToken: string;
-            };
-        } | undefined;
     }>;
+    volume: z.ZodOptional<z.ZodObject<{
+        usd: z.ZodObject<{
+            srcToken: z.ZodString;
+            dstToken: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            srcToken: string;
+            dstToken: string;
+        }, {
+            srcToken: string;
+            dstToken: string;
+        }>;
+    }, "strip", z.ZodTypeAny, {
+        usd: {
+            srcToken: string;
+            dstToken: string;
+        };
+    }, {
+        usd: {
+            srcToken: string;
+            dstToken: string;
+        };
+    }>>;
+    priceImpactPercent: z.ZodOptional<z.ZodNumber>;
+    autoK: z.ZodOptional<z.ZodNumber>;
+    k: z.ZodOptional<z.ZodNumber>;
+    mxK: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
-    quoteId: string;
+    quoteId: string | null;
     presets: {
         fast: {
             auctionDuration: number;
@@ -673,6 +599,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -680,13 +607,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         medium: {
             auctionDuration: number;
@@ -695,6 +620,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -702,13 +628,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         slow: {
             auctionDuration: number;
@@ -717,6 +641,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -724,13 +649,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         custom?: {
             auctionDuration: number;
@@ -739,6 +662,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -746,18 +670,13 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         } | undefined;
     };
-    srcEscrowFactory: string;
-    dstEscrowFactory: string;
-    whitelist: string[];
     timeLocks: {
         srcWithdrawal: number;
         srcPublicWithdrawal: number;
@@ -767,23 +686,32 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
         dstPublicWithdrawal: number;
         dstCancellation: number;
     };
+    srcEscrowFactory: string;
+    dstEscrowFactory: string;
     srcSafetyDeposit: string;
     dstSafetyDeposit: string;
-    recommendedPreset: "custom" | "fast" | "medium" | "slow";
+    whitelist: string[];
+    recommendedPreset: "fast" | "medium" | "slow" | "custom";
     prices: {
         usd: {
             srcToken: string;
             dstToken: string;
         };
-        volume?: {
-            usd: {
-                srcToken: string;
-                dstToken: string;
-            };
-        } | undefined;
     };
+    srcTokenAmount?: string | undefined;
+    dstTokenAmount?: string | undefined;
+    volume?: {
+        usd: {
+            srcToken: string;
+            dstToken: string;
+        };
+    } | undefined;
+    priceImpactPercent?: number | undefined;
+    autoK?: number | undefined;
+    k?: number | undefined;
+    mxK?: number | undefined;
 }, {
-    quoteId: string;
+    quoteId: string | null;
     presets: {
         fast: {
             auctionDuration: number;
@@ -792,6 +720,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -799,13 +728,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         medium: {
             auctionDuration: number;
@@ -814,6 +741,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -821,13 +749,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         slow: {
             auctionDuration: number;
@@ -836,6 +762,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -843,13 +770,11 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         };
         custom?: {
             auctionDuration: number;
@@ -858,6 +783,7 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
             auctionStartAmount: string;
             startAmount: string;
             auctionEndAmount: string;
+            exclusiveResolver: string | null;
             allowPartialFills: boolean;
             allowMultipleFills: boolean;
             gasCost: {
@@ -865,18 +791,13 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
                 gasPriceEstimate: string;
             };
             secretsCount: number;
-            exclusiveResolver?: {
-                costInDstToken: string;
-                points: {
-                    delay: number;
-                    coefficient: number;
-                }[];
-            } | null | undefined;
+            costInDstToken?: string | undefined;
+            points?: {
+                delay: number;
+                coefficient: number;
+            }[] | undefined;
         } | undefined;
     };
-    srcEscrowFactory: string;
-    dstEscrowFactory: string;
-    whitelist: string[];
     timeLocks: {
         srcWithdrawal: number;
         srcPublicWithdrawal: number;
@@ -886,21 +807,30 @@ export declare const getQuoteResponseSchema: z.ZodObject<{
         dstPublicWithdrawal: number;
         dstCancellation: number;
     };
+    srcEscrowFactory: string;
+    dstEscrowFactory: string;
     srcSafetyDeposit: string;
     dstSafetyDeposit: string;
-    recommendedPreset: "custom" | "fast" | "medium" | "slow";
+    whitelist: string[];
+    recommendedPreset: "fast" | "medium" | "slow" | "custom";
     prices: {
         usd: {
             srcToken: string;
             dstToken: string;
         };
-        volume?: {
-            usd: {
-                srcToken: string;
-                dstToken: string;
-            };
-        } | undefined;
     };
+    srcTokenAmount?: string | undefined;
+    dstTokenAmount?: string | undefined;
+    volume?: {
+        usd: {
+            srcToken: string;
+            dstToken: string;
+        };
+    } | undefined;
+    priceImpactPercent?: number | undefined;
+    autoK?: number | undefined;
+    k?: number | undefined;
+    mxK?: number | undefined;
 }>;
 export type GetQuoteResponse = z.infer<typeof getQuoteResponseSchema>;
 //# sourceMappingURL=fusion.d.ts.map

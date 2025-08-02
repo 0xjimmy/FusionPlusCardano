@@ -5,7 +5,6 @@ import resolver from './routes/Resolver'
 import relayer from './routes/Relayer'
 
 const app = new Hono()
-const fusionplus = new Hono()
 
 // Add CORS middleware with wildcard origin
 app.use('*', cors({
@@ -14,31 +13,14 @@ app.use('*', cors({
   allowHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }))
-
-fusionplus.use('*', cors({
-  origin: '*',
-  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}))
-
 app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 
-fusionplus.get('/', async (c) => {
-  // const orders = await main()
-  // console.log(orders)
-  return c.text('Hello Fusion!')
-})
-
 // Mount the resolver routes (quoter, etc.)
-fusionplus.route('/resolver', resolver)
+app.route('/resolver', resolver)
 
 // Mount the relayer routes (orders, etc.)
-fusionplus.route('/relayer', relayer)
-
-// Mount the fusionplus router
-app.route('/fusion-plus', fusionplus)
+app.route('/fusion-plus', relayer)
 
 export default app

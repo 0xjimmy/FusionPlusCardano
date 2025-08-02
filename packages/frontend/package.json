@@ -9,8 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@1inch/cross-chain-sdk": "0.1.14",
+    "@1inch/cross-chain-sdk": "workspace:*",
     "@1inch/limit-order-sdk": "4.9.5-rc.0",
+    "@evolution-sdk/lucid": "^2.0.1",
     "@fusion-cardano/shared": "workspace:*",
     "@preact/signals": "^2.2.1",
     "preact": "^10.26.9",
