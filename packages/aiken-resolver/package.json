@@ -1,0 +1,12 @@
+{
+  "name": "@fusion/aiken-contracts",
+  "version": "1.0.0",
+  "description": "Aiken smart contracts for Fusion Cardano",
+  "scripts": {
+    "build": "aiken build",
+    "check": "aiken check",
+    "test": "aiken check",
+    "clean": "rm -rf plutus.json"
+  },
+  "devDependencies": {}
+}

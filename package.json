@@ -1,0 +1,20 @@
+{
+  "name": "fusion-cardano-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo with Aiken, Foundry, Vite+Preact, and Hono packages",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r clean"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

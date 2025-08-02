@@ -1,0 +1,13 @@
+{
+  "name": "@fusion/foundry-contracts",
+  "version": "1.0.0",
+  "description": "Foundry smart contracts for Fusion Cardano",
+  "scripts": {
+    "build": "forge build",
+    "test": "forge test",
+    "dev": "forge test --watch",
+    "clean": "forge clean",
+    "lint": "forge fmt --check"
+  },
+  "devDependencies": {}
+}
