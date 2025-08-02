@@ -80,7 +80,7 @@ const handleQuoteReceive = async (c: any) => {
 };
 
 // Register both routes (with and without trailing slash)
-quoter.get('/quote/receive', handleQuoteReceive);
-quoter.get('/quote/receive/', handleQuoteReceive);
+quoter.get('/v1.0/quote/receive', handleQuoteReceive);
+quoter.get('/v1.0/quote/receive/', handleQuoteReceive);
 
 export default quoter 

@@ -1,7 +1,8 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { SDK } from "@1inch/cross-chain-sdk";
-import quoter from './routes/quoter'
+import resolver from './routes/Resolver'
+import relayer from './routes/Relayer'
 
 const app = new Hono()
 const fusionplus = new Hono()
@@ -31,8 +32,11 @@ fusionplus.get('/', async (c) => {
   return c.text('Hello Fusion!')
 })
 
-// Mount the quoter routes
-fusionplus.route('/quoter/:version', quoter)
+// Mount the resolver routes (quoter, etc.)
+fusionplus.route('/resolver', resolver)
+
+// Mount the relayer routes (orders, etc.)
+fusionplus.route('/relayer', relayer)
 
 // Mount the fusionplus router
 app.route('/fusion-plus', fusionplus)
