@@ -19,12 +19,12 @@ const loadDeploymentConfig = (network: string): CardanoDeploymentConfig => {
     if (network === "preview") {
       return {
         network: "preview",
-        scriptHash: "fd031f12a6cf083eba41102e3b70765a98d815f80cdb800704ca25a9",
-        scriptAddress: "addr_test1wr7sx8cj5m8ss046gygzuwmswedf3kq4lqxdhqq8qn9zt2g8lqjr0",
+        scriptHash: "986a4a642800db0851382bfc34934714d0022503834edc99dbff94c0",
+        scriptAddress: "addr_test1wzvx5jny9qqdkzz38q4lcdyngu2dqq39qwp5ahyem0lefsqjd870e",
         validator: "source_escrow.source_escrow.spend",
-        deployedAt: "2025-08-03T07:16:43.270Z",
-        testedAt: "2025-08-03T07:09:11.898Z",
-        status: "setup_verified"
+        deployedAt: "2025-01-27T12:00:00.000Z",
+        testedAt: "2025-01-27T12:00:00.000Z",
+        status: "deployed"
       };
     } else if (network === "mainnet") {
       // Add mainnet configuration when available
