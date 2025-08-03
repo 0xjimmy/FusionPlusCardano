@@ -1,5 +1,16 @@
 ## Foundry
 
+### Destination escrow for Cardano-bound swaps
+
+This package includes `src/DestinationEscrow.sol`, a Solady-based destination-side escrow used when sourcing funds from Aiken on Cardano and settling on EVM.
+
+- deposit(swapId, token, recipient, amount, deadline) — owner deposits ERC20 or native ETH into escrow for the given swapId
+- release(swapId, to) — owner releases escrowed funds to the destination address upon proof/attestation
+- refund(swapId, to) — owner refunds after deadline if not released
+
+Use Solady imports bundled in lib/solady. See fusion-resolver-example for resolver usage and approvals.
+
+
 **Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
 Foundry consists of:

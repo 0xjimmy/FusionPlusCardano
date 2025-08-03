@@ -11,9 +11,12 @@
   },
   "dependencies": {
     "@1inch/cross-chain-sdk": "workspace:*",
+    "@evolution-sdk/lucid": "^2.0.1",
     "@fusion-cardano/shared": "workspace:*",
     "@hono/node-server": "^1.8.2",
+    "@noble/hashes": "^1.3.3",
     "hono": "^4.8.10",
+    "viem": "^2.33.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {

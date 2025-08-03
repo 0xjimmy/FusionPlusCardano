@@ -8,9 +8,17 @@ import { keccak_256 } from "@noble/hashes/sha3.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import type { QuoteResult } from "./getQuote";
 import plutusJson from "../../../aiken-resolver/plutus.json";
+import { z } from "zod";
+import { TAKER_ADDRESS_CARDANO } from "../lib/fusion/constants";
+
+const rescueWithdrawSchema = z.object({
+  txHash: z.string().min(1, 'Transaction hash is required'),
+  outputIndex: z.number().min(0, 'Output index must be non-negative'),
+  secret: z.string().min(1, 'Secret is required')
+});
 
 export interface SwapResult {
-  submitOrder: any;
+  completeSwapResponse: any;
   secrets: `0x${string}`[];
   secretHashes: `0x${string}`[];
   makerAddress: string;
@@ -22,6 +30,7 @@ export interface SwapResult {
   expireTimestamp: number;
   makerPkh: string;
   takerPkh: string;
+  redemptionTxHash?: string;
 }
 
 export async function executeSwap(
@@ -77,9 +86,8 @@ export async function executeSwap(
   const makerWalletAddress = await lucid.wallet().address();
   const makerPkh = paymentCredentialOf(makerWalletAddress).hash;
   
-  // For now, we'll use a hardcoded taker PKH
-  // In a real implementation, this would come from the order or user input
-  const takerPkh = "0000000000000000000000000000000000000000000000000000000000000000"; // Placeholder
+  // Get taker PKH from the taker address in constants
+  const takerPkh = paymentCredentialOf(TAKER_ADDRESS_CARDANO).hash;
   
   // Use the first secret for the escrow (assuming single fill for simplicity)
   const secretBytes = new Uint8Array(Buffer.from(secrets[0].slice(2), 'hex')); // Remove '0x' prefix
@@ -138,49 +146,145 @@ export async function executeSwap(
   console.log(`Maker PKH: ${makerPkh}`);
   console.log(`Taker PKH: ${takerPkh}`);
  
-  // Wait for escrow transaction to be confirmed
-  await lucid.awaitTx(escrowTxHash);
-
-  // Submit the order
-  const submitOrder = await sdk.submitOrder(
-    quote.srcChainId, 
-    order.order, 
-    order.quoteId, 
-    secretHashes
-  );
+  // Manual polling for transaction confirmation
+  console.log("Waiting for transaction confirmation...");
+  let isConfirmed = false;
+  let attempts = 0;
+  const maxAttempts = 50; // 250 seconds max wait time (50 * 5 seconds)
   
-  console.log("Submitted order hash:", submitOrder.orderHash);
-  console.log("Submit order response:", submitOrder);
-
-  // Wait for order status and reveal secrets when ready
-  let status: OrderStatus | undefined | string = undefined;
-  while (status !== "SKIBIDI") {
-    const orderStatus = await sdk.getOrderStatus(submitOrder.orderHash);
-    console.log("Order status:", orderStatus);
-    status = orderStatus.status;
-    
-    // If order is ready for secret revelation, reveal the secrets
-    if (status === "READY_TO_REVEAL_SECRETS" || status === "READY") {
-      console.log("Order ready for secret revelation");
-      // Reveal secrets logic would go here if needed
-      break;
+  while (!isConfirmed && attempts < maxAttempts) {
+    try {
+      // Wait 5 seconds before checking
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      // Try to fetch transaction status from Koios
+      const response = await fetch("https://preview.koios.rest/api/v1/tx_status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyIjoic3Rha2UxdTkzNGs0eGtwenhncm5jdnh0NXFoMGtkNHVwdmVtYW5wczRlMHJ1bjVzamY5ZHMzZng4dTkiLCJleHAiOjE3NjA5NDMyNDEsInRpZXIiOjEsInByb2pJRCI6ImRlbW8tZnVzaW9uIn0.JY7hHVFSmpH8XPFyZ7qXvA04XktAM1YEaizq8CYRw1Y"
+        },
+        body: JSON.stringify({
+          _tx_hashes: [escrowTxHash]
+        }),
+      });
+      
+      if (response.ok) {
+        const txStatus = await response.json();
+        if (txStatus && txStatus.length > 0 && txStatus[0].num_confirmations > 0) {
+          isConfirmed = true;
+          console.log(`Transaction confirmed with ${txStatus[0].num_confirmations} confirmations`);
+        } else {
+          console.log(`Attempt ${attempts + 1}/${maxAttempts}: Transaction not yet confirmed`);
+        }
+      }
+    } catch (error) {
+      console.log(`Attempt ${attempts + 1}/${maxAttempts}: Error checking transaction status`, error);
     }
     
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    attempts++;
+  }
+  
+  if (!isConfirmed) {
+    throw new Error("Transaction confirmation timeout");
+  }
+
+  // Get the output index (assuming it's 0 for the first output)
+  const outputIndex = 0;
+
+  // Call the /resolver/complete-swap API instead of submitting order
+  const completeSwapPayload = {
+    txHash: escrowTxHash,
+    outputIndex: outputIndex,
+    secret: secrets[0] // Use the first secret
+  };
+
+  // Validate the payload
+  const validatedPayload = rescueWithdrawSchema.parse(completeSwapPayload);
+
+  console.log("Calling /resolver/complete-swap with payload:", validatedPayload);
+
+  // Make the API call
+  const response = await fetch("http://localhost:8787/resolver/complete-swap", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(validatedPayload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to complete swap: ${response.statusText}`);
+  }
+
+  const completeSwapResponse = await response.json();
+  console.log("Complete swap response:", completeSwapResponse);
+
+  // Extract the redemption transaction hash from the response
+  const redemptionTxHash = completeSwapResponse.details?.redemptionTxHash;
+  
+  if (redemptionTxHash) {
+    console.log("Monitoring redemption transaction:", redemptionTxHash);
+    
+    // Poll the redemption transaction for confirmation
+    let redemptionConfirmed = false;
+    let redemptionAttempts = 0;
+    const maxRedemptionAttempts = 50; // 250 seconds max wait time
+    
+    while (!redemptionConfirmed && redemptionAttempts < maxRedemptionAttempts) {
+      try {
+        // Wait 5 seconds before checking
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        
+        // Check redemption transaction status
+        const redemptionResponse = await fetch("https://preview.koios.rest/api/v1/tx_status", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyIjoic3Rha2UxdTkzNGs0eGtwenhncm5jdnh0NXFoMGtkNHVwdmVtYW5wczRlMHJ1bjVzamY5ZHMzZng4dTkiLCJleHAiOjE3NjA5NDMyNDEsInRpZXIiOjEsInByb2pJRCI6ImRlbW8tZnVzaW9uIn0.JY7hHVFSmpH8XPFyZ7qXvA04XktAM1YEaizq8CYRw1Y"
+          },
+          body: JSON.stringify({
+            _tx_hashes: [redemptionTxHash]
+          }),
+        });
+        
+        if (redemptionResponse.ok) {
+          const redemptionTxStatus = await redemptionResponse.json();
+          if (redemptionTxStatus && redemptionTxStatus.length > 0 && redemptionTxStatus[0].num_confirmations > 0) {
+            redemptionConfirmed = true;
+            console.log(`✅ Redemption transaction confirmed with ${redemptionTxStatus[0].num_confirmations} confirmations`);
+            console.log(`🎉 Swap completed successfully! Funds redeemed to taker wallet.`);
+          } else {
+            console.log(`Redemption attempt ${redemptionAttempts + 1}/${maxRedemptionAttempts}: Transaction not yet confirmed`);
+          }
+        }
+      } catch (error) {
+        console.log(`Redemption attempt ${redemptionAttempts + 1}/${maxRedemptionAttempts}: Error checking transaction status`, error);
+      }
+      
+      redemptionAttempts++;
+    }
+    
+    if (!redemptionConfirmed) {
+      console.warn("⚠️ Redemption transaction confirmation timeout - but swap may still be processing");
+    }
+  } else {
+    console.warn("⚠️ No redemption transaction hash found in response");
   }
 
   return {
-    submitOrder,
+    completeSwapResponse,
     secrets,
     secretHashes,
     makerAddress,
-    orderHash: submitOrder.orderHash,
+    orderHash: order.hash,
     escrowTxHash,
     scriptAddress,
     datum,
     secretHash: bytesToHex(secretHashBytes),
     expireTimestamp,
     makerPkh,
-    takerPkh
+    takerPkh,
+    redemptionTxHash // Add the redemption tx hash to the return object
   };
 }
