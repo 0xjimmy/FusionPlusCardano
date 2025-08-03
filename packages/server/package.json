@@ -4,21 +4,21 @@
   "description": "Hono server for Fusion Cardano",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "bun run --watch src/server.ts",
+    "start": "bun run dist/server.js",
     "build": "tsc -b",
-    "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "clean": "rm -rf dist"
   },
   "dependencies": {
     "@1inch/cross-chain-sdk": "workspace:*",
     "@fusion-cardano/shared": "workspace:*",
+    "@hono/node-server": "^1.8.2",
     "hono": "^4.8.10",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241218.0",
+    "@types/node": "^20.0.0",
     "typescript": "^5.0.0",
-    "wrangler": "^4.4.0"
+    "vitest": "^3.2.4"
   }
 }

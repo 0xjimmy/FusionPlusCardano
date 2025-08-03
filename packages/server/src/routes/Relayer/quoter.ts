@@ -2,6 +2,8 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { z } from "zod";
 import { getQuoteSchema, getQuoteResponseSchema } from "@fusion-cardano/shared";
+import { CustomNetworkEnum } from "@1inch/cross-chain-sdk";
+import { generateMockQuoteResponse } from './manualQuoter';
 
 const FUSION_BASE_URL = "https://api.1inch.dev/fusion-plus";
 
@@ -21,6 +23,22 @@ const handleQuoteReceive = async (c: any) => {
     // Parse query parameters with zod
     const queryParams = c.req.query();
     const validatedParams = getQuoteSchema.parse(queryParams);
+    
+    // Check if either source or destination chain is Cardano or Sepolia
+    const isCardanoOrSepolia = 
+      validatedParams.srcChain === CustomNetworkEnum.CARDANO_PREVIEW ||
+      validatedParams.srcChain === CustomNetworkEnum.CARDANO ||
+      validatedParams.srcChain === CustomNetworkEnum.SEPOLIA ||
+      validatedParams.dstChain === CustomNetworkEnum.CARDANO_PREVIEW ||
+      validatedParams.dstChain === CustomNetworkEnum.CARDANO ||
+      validatedParams.dstChain === CustomNetworkEnum.SEPOLIA;
+    
+    // If Cardano or Sepolia is involved, use mock response
+    if (isCardanoOrSepolia) {
+      console.log('Using mock quote response for Cardano/Sepolia networks');
+      const mockResponse = generateMockQuoteResponse(validatedParams);
+      return c.json(mockResponse);
+    }
     
     // Get API key from environment
     const apiKey = (c.env as any)?.FUSION_API_KEY || process.env.FUSION_API_KEY;

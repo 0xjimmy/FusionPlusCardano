@@ -1,4 +1,4 @@
-import { SDK, HashLock, randBigInt, NetworkEnum, type QuoteParams, OrderStatus, type MerkleLeaf } from "@1inch/cross-chain-sdk";
+import { SDK, HashLock, randBigInt, type QuoteParams, OrderStatus, type MerkleLeaf, CustomNetworkEnum } from "@1inch/cross-chain-sdk";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { ViemProviderConnector } from "./viemProviderConnector";
 import { keccak256, encodePacked } from "viem/utils";
@@ -27,10 +27,10 @@ export async function createOrder() {
   });
 
   const params = {
-    // srcChain: CustomNetworkEnum.CARDANO_PREVIEW,
-    // dstChain: CustomNetworkEnum.SEPOLIA,
-    srcChain: NetworkEnum.BINANCE,
-    dstChain: NetworkEnum.AVALANCHE,
+    srcChain: CustomNetworkEnum.CARDANO_PREVIEW,
+    dstChain: CustomNetworkEnum.SEPOLIA,
+    // srcChain: NetworkEnum.BINANCE,
+    // dstChain: NetworkEnum.AVALANCHE,
     srcTokenAddress: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d" as `0x${string}`,
     dstTokenAddress: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7" as `0x${string}`,
     amount: encodePacked(["uint256"], [parseUnits("100", 18)]),
@@ -41,8 +41,10 @@ export async function createOrder() {
   // const quote = await getQuote(params);
   
   const sdkQuoteParams: QuoteParams = {
-    srcChainId: NetworkEnum.BINANCE,
-    dstChainId: NetworkEnum.AVALANCHE,
+    // srcChainId: NetworkEnum.BINANCE,
+    // dstChainId: NetworkEnum.AVALANCHE,
+    srcChainId: CustomNetworkEnum.CARDANO_PREVIEW,
+    dstChainId: CustomNetworkEnum.SEPOLIA,
     srcTokenAddress: params.srcTokenAddress,
     dstTokenAddress: params.dstTokenAddress,
     amount: params.amount,

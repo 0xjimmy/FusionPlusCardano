@@ -7,11 +7,14 @@
     "check": "aiken check",
     "test": "aiken check",
     "test-offchain": "bun test/sourceEscrow.ts",
+    "deploy-preview": "bun test/deployToPreview.ts",
+    "test-deploy-setup": "bun test/deployToPreviewTest.ts",
     "clean": "rm -rf plutus.json"
   },
   "dependencies": {
     "@evolution-sdk/lucid": "^2.0.1",
-    "@noble/hashes": "^1.8.0"
+    "@noble/hashes": "^1.8.0",
+    "dotenv": "^17.2.1"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"

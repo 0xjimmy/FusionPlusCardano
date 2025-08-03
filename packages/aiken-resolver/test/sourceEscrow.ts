@@ -1,24 +1,9 @@
-import { validatorToScriptHash, Data, fromText, generatePrivateKey, makeWalletFromPrivateKey, Constr, Koios, validatorToAddress, paymentCredentialOf } from "@evolution-sdk/lucid";
+import { validatorToScriptHash, Data, Constr, validatorToAddress, paymentCredentialOf } from "@evolution-sdk/lucid";
 import { keccak_256 } from "@noble/hashes/sha3.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { makeEmulatorEnv } from "./utils/setupEmulatorEnv";
 import { uploadScript } from "./utils/uploadScript";
 import plutusJson from "../plutus.json"
-
-// Utility function to convert hex string to Uint8Array
-function hexToBytes(hex: string): Uint8Array {
-    const cleanHex = hex.replace(/^0x/, '');
-    return new Uint8Array(cleanHex.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
-}
-
-// Define datum schema for type safety
-const DatumSchema = Data.Object({
-    expire_timestamp: Data.Integer(),
-    maker_address: Data.Bytes(),
-    taker_address: Data.Bytes(),
-    secret_hash: Data.Bytes(),
-});
-type DatumType = Data.Static<typeof DatumSchema>;
 
 const { lucid, makerAccount, takerAccount, deploymentAccount, emulator } = await makeEmulatorEnv();
 
