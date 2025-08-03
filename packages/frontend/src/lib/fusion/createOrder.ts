@@ -76,6 +76,7 @@ export async function createOrder() {
     });
 
   console.log(order.hash)
+  console.log(secretHashes)
 
   const submitOrder = await sdk.submitOrder(quoteWithSdk.srcChainId, order.order, order.quoteId, secretHashes)
   console.log(submitOrder.orderHash)

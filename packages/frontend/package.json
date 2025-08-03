@@ -13,6 +13,7 @@
     "@1inch/limit-order-sdk": "4.9.5-rc.0",
     "@evolution-sdk/lucid": "^2.0.1",
     "@fusion-cardano/shared": "workspace:*",
+    "@noble/hashes": "^1.8.0",
     "@preact/signals": "^2.2.1",
     "preact": "^10.26.9",
     "viem": "^2.33.1",
@@ -27,6 +28,7 @@
     "stream-browserify": "^3.0.0",
     "typescript": "~5.8.3",
     "util": "^0.12.5",
-    "vite": "^7.0.4"
+    "vite": "^7.0.4",
+    "vite-plugin-wasm": "^3.5.0"
   }
 }
