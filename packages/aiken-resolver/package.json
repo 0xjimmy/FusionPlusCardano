@@ -6,7 +6,7 @@
     "build": "aiken build",
     "check": "aiken check",
     "test": "aiken check",
-    "deploy": "bun test/sourceEscrow.ts",
+    "test-offchain": "bun test/sourceEscrow.ts",
     "clean": "rm -rf plutus.json"
   },
   "dependencies": {
